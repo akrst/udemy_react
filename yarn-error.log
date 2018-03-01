@@ -1,0 +1,41 @@
+Arguments: 
+  /usr/local/bin/node /usr/local/Cellar/yarn/1.5.1/libexec/bin/yarn.js add webpack webpack-dev-server babel-core@6.25.0 babel-loader@7.1.1 babel-preset-react@6.24.1 babel-preset-es2015@6.24.1
+
+PATH: 
+  /Users/akirasato/.rbenv/shims:/Users/akirasato/.rbenv/shims:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+
+Yarn version: 
+  1.5.1
+
+Node version: 
+  6.9.1
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  {
+    "name": "akirasato",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "repository": "https://github.com/akrst/udemy_react.git",
+    "author": "akrst <akirasato@psychic-vr-lab.com>"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: Found incompatible module
+      at MessageError.Error (native)
+      at new MessageError (/usr/local/Cellar/yarn/1.5.1/libexec/lib/cli.js:186:110)
+      at checkOne (/usr/local/Cellar/yarn/1.5.1/libexec/lib/cli.js:62444:11)
+      at Object.check (/usr/local/Cellar/yarn/1.5.1/libexec/lib/cli.js:62463:5)
+      at /usr/local/Cellar/yarn/1.5.1/libexec/lib/cli.js:22803:73
+      at next (native)
+      at step (/usr/local/Cellar/yarn/1.5.1/libexec/lib/cli.js:98:30)
+      at /usr/local/Cellar/yarn/1.5.1/libexec/lib/cli.js:109:13
