@@ -1,38 +1,37 @@
-import React, { PropTypes }from 'react';
-import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
+import React from 'react';
+import PropTypes from 'prop-types';
 
-	const InnerMap = withGoogleMap(props => (
+
+import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
+	//InnerMapコンポーネント
+	const InnerMap = withGoogleMap(({location, marker}) => (
 			<GoogleMap
 				defaultZoom={12}
-				defaultCenter={props.position}
-				center ={props.position}
+				defaultCenter={location}
+				center ={location}
 			>
-			<Marker {...props.marker} />
+			<Marker {...marker} />
 			</GoogleMap>
 
 		));
-
-	const Map = ({lat, lng}) => {
-		const position = {lat, lng};
-		return(
+	//Mapコンポーネント
+	//引数が二つlocation（lat, lng）あるから、()で囲っている
+	const Map = ({location}) =>(
+		//Inner Mapコンポーネントを呼び出し
 			<InnerMap
 				containerElement={(<div />)}
 				mapElement={(<div className='map'/>)}
-				position={position}
-				marker={{position}}
+				location={location}
+				marker={{position: location}}
 			/>
 		);
-	};
 
+// propTypesはnumberに設定、必須設定。デフォルトの値は親であるAppコンポーネントから受け取る。
 Map.propTypes = {
-	lat: PropTypes.number,
-	lng: PropTypes.number,
+	location: PropTypes.objectOf(PropTypes.number).isRequired,
 };
 
-Map.defaultProps = {
-	lat: 35.6585805,
-	lng: 139.7454329,
-}
 
 
+//Mapを外から呼び出し可能に
 export default Map;
