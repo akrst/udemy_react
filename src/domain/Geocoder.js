@@ -3,7 +3,7 @@ import axios from 'axios';
 //APIの呼び出しのエンドポイントを変数に代入
 const GEOCODE_ENDPOINT ='https://maps.googleapis.com/maps/api/geocode/json';
 
-export const geocode = place =>
+export const geocode = place => //変数geocodeとして引数(place)を持つ、APIを叩く関数を作成
 	axios
 	//第一引数でAPIを指定し、第二引数でparams: {address: place}に引数からplaceの情報を渡して、その場所の地図情報などをAPIからresultsとして受けっている。
 	.get(GEOCODE_ENDPOINT, { params: { address: place } })
@@ -13,12 +13,12 @@ export const geocode = place =>
 		const status = data.status;
 		const result = data.results[0];
 
-		if(typeof result === 'undefined'){
+		if(typeof result === 'undefined'){ //undefinedの場合、statusのみを返す
 			return {status};
-		}
+		} //else文を省略している
 		const address = result.formatted_address; //変数addressの中に代入することで、App.jsxで使用する際にシンプルかつ、ショートハンドでの記述が可能に
 		const location = result.geometry.location; //変数loactionの中に代入することで、App.jsxで使用する際にシンプルかつ、ショートハンドでの記述が可能に
-		return {status, address, location};
+		return {status, address, location}; //undefined以外の場合に、status,address,lobationを返す
 	})
 ;
 

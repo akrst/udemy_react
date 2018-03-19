@@ -1,4 +1,6 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+
 
 //親であるAppコンポーネントから、props（初期状態）として、address, location(lat, lng)を受け取っている
 const GeocodeResult = ({address, location}) => (
