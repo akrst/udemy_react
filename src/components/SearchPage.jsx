@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import queryString from 'query-string';
 
 import SearchForm from './SearchForm.jsx';
 import GeocodeResult from './GeocodeResult.jsx';
@@ -19,13 +20,32 @@ class SearchPage extends Component{	//ES6 JavaScriptでクラスを継承する�
 		super(props); 	//super()は親クラスのコンストラクタに引数を渡す時に使用（この場合、Appクラスの親であるComponentクラスに引数としてpropsを渡している。）
 		this.state = {
 			//lat, lngは常にセットで呼ばれるのlacationというstateを作成、その中にlat, lngをハッシュ(多次元配列)として入れる
+			place: this.getPlaceParam() || '東京タワー',
 			location: {
 				lat: 35.6585805,
 				lng: 139.7454329,
 			},
 			sortKey: 'price',
+
 		};
 	}
+	componentDidMount(){
+		const place = this.getPlaceParam();
+		if(place){
+			this.startSearch(place);
+		}
+	}
+
+	getPlaceParam(){
+		const params = queryString.parse(this.props.location.search);
+		const place = params.place;
+		if (place && place.length > 0){
+			return place;
+		}
+		return null;
+	}
+
+
 	setErrorMessage (message){ //エラーが起きたときに、変更するstateをひとまとめにしたもの、メッセージのみは引数を持たせて、それぞれで表示
 		this.setState({	//setStateは、stateを変える役割と、renderを呼び直す二つの役割がある
 			address: message,
@@ -35,11 +55,21 @@ class SearchPage extends Component{	//ES6 JavaScriptでクラスを継承する�
 			},
 		});
 	}
+	//onChangeで受けったものをplaceというstateにセットするための関数
+	handlePlaceChange(place){
+		this.setState({ place }) //ショートハンドで記述 place: place (placeというstateに引数place(=入力された文字列)をセットしている)
+	}
+
 	//SearchFormのonSubmitイベント時に渡されたplaceを受け取り、GeocodeResult.jsxに定義したgeocode関数を利用して、取得した情報を元に分岐し、state設置して、描画し直す関数
-	handlePlaceSubmit(place){
-		this.props.history.push(`/?query=${place}`); //historyAPIから受け取っているpropsを使用
+	handlePlaceSubmit(e){
+		e.preventDefault();
+		this.props.history.push(`/?place=${this.state.place}`); //historyAPIから受け取っているpropsを使用
 		//入力されたplaceを、Geocorder.jsに定義したgeocodeという関数に渡しその返り値をthen関数の引数に、{status, address, location}として渡している
-		geocode(place)
+		this.startSearch()
+	}
+
+	startSearch(){
+		geocode(this.state.place)
 			//geocodeから受け取った返り値を引数として{status, address, location}を使用している
 			.then(({ status, address, location }) => {	//無名関数のアロー関数として一連の流れ（スイッチ文でstatusによってsetStateの値を分岐させている。）を定義
 				switch(status){
@@ -63,7 +93,7 @@ class SearchPage extends Component{	//ES6 JavaScriptでクラスを継承する�
 			})
 			.catch(() => {
 				this.setErrorMessage('通信に失敗しました。');
-			});
+		});
 	}
 
 	handleSortKeyChange(sortKey){
@@ -82,7 +112,11 @@ class SearchPage extends Component{	//ES6 JavaScriptでクラスを継承する�
 				<h1 className="app_title">ホテル検索</h1>
 				{/* propsを子コンポーネントSearchFormに渡している */}
 				{/* SearchFormコンポーネントから、onSubmitイベントを通じて、入力された文字列を受け取っている */}
-				<SearchForm onSubmit={ place => this.handlePlaceSubmit(place)} />
+				<SearchForm
+					place={this.state.place}
+					onPlaceChange={ place => this.handlePlaceChange(place)} //SearchFormにhandlePlaceChangeを呼び出す関数を渡している
+					onSubmit={ (e) => this.handlePlaceSubmit(e)} //SearchFormにhandlePlaceSubmitを呼び出す関数を渡している
+				/>
 				<div className="result-area">
 					<Map
 						//handlePlaceSubmitによって、APIから受け取ったJSONの内容が、address, lat, lngにstateとしてセットされている
@@ -109,6 +143,7 @@ class SearchPage extends Component{	//ES6 JavaScriptでクラスを継承する�
 }
 SearchPage.propTypes = {
 	history: PropTypes.shape({push: PropTypes.func}).isRequired,
+	location: PropTypes.shape({search: PropTypes.string}).isRequired,
 };
 
 export default SearchPage;
