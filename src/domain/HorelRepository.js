@@ -5,7 +5,7 @@ import Rakuten from '../lib/Rakuten';
 const RAKUTEN_APP_ID = '1040862501043616211';
 
 //locationの値をApp（元はgeocoderから受けとたったもの）を受け取りAPIを叩いて、id, name, urlを受け取って呼び出し元に(hotelステイトに入れるために)返している
-export const searchHotelByLoacation = (location) => {
+export const searchHotelByLocation = (location) => {
 	const params = {
 		applicationId: RAKUTEN_APP_ID,
 		datumType: 1,
