@@ -44,7 +44,6 @@ const geocodeResult = (
 	return state;
 };
 
-
 const hotels = (state= [], action) => {
 	switch (action.type){
 		case 'CHANGE_HOTELS':
